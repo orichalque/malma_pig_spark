@@ -1,5 +1,8 @@
+# -*- coding: utf8 -*-
 import re
 from urllib.parse import urlparse
+from bs4 import BeautifulSoup
+from collections import defaultdict
 import time
 
 
@@ -12,45 +15,89 @@ def count( counter ):
     counter = counter + 1
     return counter
 
-fileName = "../data/CC-MAIN-20160924173739-00000-ip-10-143-35-109.ec2.internal.warc"
+##Filenames
+rootDir = "../data/"
+
+fileName = "xaaCC-MAIN-20160924173739-00000-ip-10-143-35-109.ec2.internal.warc"
+logFileName = "log-"+fileName
+outputFileName = rootDir+"/etl-"+fileName+".txt"
 test = "../data/test.txt"
 
+##Regex
 headWordMatch = "^WARC-Target-URI: (.*)$"
 regexHead = re.compile(headWordMatch)
-
-bodyWordMatch = "(?<=\<a)(.*)(?<=href)(.*)(http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+)"
+bodyWordMatch = "^https?://(.*)"
 regexBody = re.compile(bodyWordMatch)
-    
+
+##Counters
 counterHead = 0
 counterBody = 0
 
+##Variables
 previous_match = ""
 current_match = ""
+href = {}
 
-href = []
-
-print("[*] Traitement en cours...")
-t0 = time.clock()
-
-with open(fileName , encoding='latin-1') as f:
-    for line in f:
-        for match in regexHead.findall(line):
-            current_match = getDomain(match)
-        if previous_match != current_match:
-            previous_match = getDomain(current_match)
-            counterHead = count(counterHead)
-        else:
-            for url in regexBody.findall(line):
-                counterBody = count(counterBody)
-
-        
-        
+##Start
+with open(rootDir+logFileName ,"w+", encoding='latin-1') as log:
+    log.write("[*] Traitement en cours...\n")
+    log.write("[**]Lecture en cours ...\n")
+    t0 = time.clock()
+  
+    with open(rootDir+fileName , encoding='latin-1') as f:
+        for line in f:
+            for match in regexHead.findall(line):
+                current_match = match
+            if previous_match != current_match:
+                previous_match = current_match
+                counterHead = count(counterHead)
+                if(previous_match not in href):
+                    href[previous_match]= []
+            else:
+                try:
+                    soup = BeautifulSoup(line, 'html.parser')
+                    for link in soup.find_all('a'):
+                        url = link.get('href')
+                        if (url is not None):
+                            rurl = regexBody.findall(url)
+                            if(len(rurl) != 0):
+                                counterBody = count(counterBody)
+                                href[previous_match].append(rurl[0])
+                                ##Si l'url n'est pas dans les urls primaires on l'ajoute
+                                if(rurl[0] not in href):
+                                    href[rurl[0]]= []
+                except:
+                    
+                    log.write("Une erreur a eu lieu !...("+ str(time.clock() - t0) +"s)")
+                    break
             
+    log.write("[**]Lecture terminée, temps écoulé : "+ str(time.clock() - t0) +" seconds\n")
 
+    log.write("[**] Ecriture en cours\n")
+
+    keys = list(href.keys())
+    with open(outputFileName,"w+", encoding='latin-1') as outputFile:
+        for url in keys:
+            line_to_write = url + " 1 {"
+            i = 0
+            for neighbours in href[url] :
+                if (i != 0) :
+                    line_to_write = line_to_write + ", (" + neighbours + ")"
+                else:
+                    line_to_write = line_to_write + "(" + neighbours + ")"
+                i = i +1
+            line_to_write = line_to_write +"}\n"
+            if(line_to_write != None):
+                outputFile.write(line_to_write)
+    log.write("[**] Ecriture en cours , temps écoulé : "+ str(time.clock() - t0) +" seconds\n")
+    ##End
                 
-            
+    log.write("[*] Traitement fini...")
+    log.write("Il y a "+ str(counterHead)+"référence pour la chaine :"+str(headWordMatch)+"\n")
+    log.write("Il y a "+ str(counterBody)+ "référence pour la chaine :"+ str(bodyWordMatch)+"\n")
+    log.write("Il y a "+ str(len(keys))+ "url primaire dans le fichier"+"\n")
+    log.write("Temps écoulé : "+ str(time.clock() - t0) +" seconds"+"\n")
 
-print("[*] Traitement fini...")
-print("Il y a ", counterHead, "référence pour la chaine :", headWordMatch)
-print("Il y a ", counterBody, "référence pour la chaine :", bodyWordMatch)
-print("Temps écoulé : ",time.clock() - t0 , " seconds")
+
+			
+			
