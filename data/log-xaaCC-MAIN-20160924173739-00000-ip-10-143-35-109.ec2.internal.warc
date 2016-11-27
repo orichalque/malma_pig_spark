@@ -1,9 +1,0 @@
-[*] Traitement en cours...
-[**]Lecture en cours ...
-Une erreur a eu lieu !...(30.015114511713893s)[**]Lecture terminée, temps écoulé : 30.015153379271087 seconds
-[**] Ecriture en cours
-[**] Ecriture en cours , temps écoulé : 30.055329867204463 seconds
-[*] Traitement fini...Il y a 257référence pour la chaine :^WARC-Target-URI: (.*)$
-Il y a 15306référence pour la chaine :^https?://(.*)
-Il y a 10847url primaire dans le fichier
-Temps écoulé : 30.055367858049838 seconds
