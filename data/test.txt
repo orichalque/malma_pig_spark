@@ -1,9 +1,0 @@
-<a href="http://www.facebook.com/091labs" target="_blank"><img src="/wp-content/themes/elegant-grunge/images/social/facebook.png" title="Facebook group" /></a>
-
-<a href="http://www.twitter.com/091labs" target="_blank"><img src="/wp-content/themes/elegant-grunge/images/social/twitter.png" title="Twitter page" /></a>
-
-<a href="http://www.boards.ie/091labs" target="_blank"><img src="/wp-content/themes/elegant-grunge/images/social/boardsie.png" title="boards.ie forum" /></a>
-
-<a href="http://091labs.com/feed/" target="_blank"><img src="/wp-content/themes/elegant-grunge/images/social/rss.png" title="RSS feed" /></a>
-
-href=http://lol.com

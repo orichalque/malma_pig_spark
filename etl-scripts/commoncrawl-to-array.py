@@ -19,7 +19,7 @@ def count( counter ):
 ##Filenames
 rootDir = "../data/"
 
-fileName = "xabCC-MAIN-20160924173741-00167-ip-10-143-35-109.ec2.internal.warc"
+fileName = "xaaCC-MAIN-20160924173739-00000-ip-10-143-35-109.ec2.internal.warc"
 logFileName = "log-"+fileName
 outputFileName = rootDir+"/etl-"+fileName+".txt"
 test = "../data/test.txt"
@@ -80,7 +80,7 @@ with open(rootDir+logFileName ,"w+", encoding='utf-8') as log:
             line_to_write = str(url+" 1 {")
             for neighbours in href[url] :
                 if (i != 0) :
-                    line_to_write = str(line_to_write + ", (" + neighbours + ")")
+                    line_to_write = str(line_to_write + ",(" + neighbours + ")")
                 else:
                     line_to_write = str(line_to_write + "(" + neighbours + ")")
                 i = i +1
