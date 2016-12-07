@@ -19,9 +19,9 @@ def count( counter ):
 ##Filenames
 rootDir = "../data/"
 
-fileName = "xaaCC-MAIN-20160924173739-00000-ip-10-143-35-109.ec2.internal.warc"
+fileName = "file.test.txt"
 logFileName = "log-"+fileName
-outputFileName = rootDir+"/etl-"+fileName+".txt"
+outputFileName = rootDir+"/etl-file.txt"
 test = "../data/test.txt"
 
 ##Regex
@@ -59,9 +59,9 @@ with open(rootDir+logFileName ,"w+", encoding='utf-8') as log:
                     for link in soup.find_all('a'):
                         url = link.get('href')
                         url = getDomain(url)
-                        if (url is not None):
+                        if (url is not None):                            
                             counterBody = count(counterBody)
-                            href[url].append(url)
+                            href[previous_match].append(url)
                             ##Si l'url n'est pas dans les urls primaires on l'ajoute
                             if(url not in href):
                                 href[url]= []
@@ -78,12 +78,12 @@ with open(rootDir+logFileName ,"w+", encoding='utf-8') as log:
         for url in keys:
             i = 0
             line_to_write = str(url+" 1 {")
-            for neighbours in href[url] :
-                if (i != 0) :
-                    line_to_write = str(line_to_write + ",(" + neighbours + ")")
-                else:
-                    line_to_write = str(line_to_write + "(" + neighbours + ")")
-                i = i +1
+            for neighbours in href[url] :                     	
+              if (i != 0):
+                line_to_write = str(line_to_write + ",(" + neighbours + ")")
+              else:
+                line_to_write = str(line_to_write + "(" + neighbours + ")")
+              i = i +1
             line_to_write =str( line_to_write +"}\n")
             if(line_to_write != None):
                 outputFile.write(line_to_write)
