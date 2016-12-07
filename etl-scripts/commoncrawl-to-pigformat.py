@@ -19,9 +19,9 @@ def count( counter ):
 ##Filenames
 rootDir = "../data/"
 
-fileName = "file.test.txt"
+fileName = "xaaCC-MAIN-20160924173739-00000-ip-10-143-35-109.ec2.internal.warc"
 logFileName = "log-"+fileName
-outputFileName = rootDir+"/etl-file.txt"
+outputFileName = rootDir+"/etl-"+fileName+".txt"
 test = "../data/test.txt"
 
 ##Regex
